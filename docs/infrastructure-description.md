@@ -16,7 +16,7 @@ This is a website running with the following specifications:
     <tr>
         <td>Back-End</td>
         <td>NodeJS</td>
-        <td>14.15.1</td>
+        <td>16</td>
     </tr>
     <tr>
         <td>Database</td>
