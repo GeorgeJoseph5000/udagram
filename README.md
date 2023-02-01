@@ -1,7 +1,5 @@
 # udagram-deployment
 
-<!-- Project title -->
-# Udagram AWS Deployment
 
 <!-- Describe your project in brief -->
 Deploy a full-stack website onto AWS using CircleCI - Advanced Web Development egFWD - Third Project
