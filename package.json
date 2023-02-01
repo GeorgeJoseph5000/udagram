@@ -12,6 +12,6 @@
         "test:api": "cd udagram-api/ && npm run test && cd ../",
         "test:frontend": "cd udagram-frontend/ && npm run test && cd ../",
         "test": "npm run test:api && npm run test:frontend",
-        "create_env_file":"chmod +x create_env_file.sh && create_env_file.sh"
+        "create_env_file":"chmod +x ./create_env_file.sh && ./create_env_file.sh"
     }
 }
