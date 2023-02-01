@@ -1,16 +1,18 @@
 {
     "scripts": {
-        "frontend:install": "cd udagram-frontend/ && npm install --force && cd ../",
-        "frontend:start": "cd udagram-frontend/ && npm run start && cd ../",
-        "frontend:build": "cd udagram-frontend/ && npm run build && cd ../",
-        "frontend:test": "cd udagram-frontend/ && npm run test && cd ../",
-        "frontend:e2e": "cd udagram-frontend/ && npm run e2e && cd ../",
-        "frontend:lint": "cd udagram-frontend/ && npm run lint && cd ../",
-        "frontend:deploy": "cd udagram-frontend/ && npm run deploy && cd ../",
-        "api:install": "cd udagram-api/ && npm install --force && cd ../",
-        "api:build": "cd udagram-api/ && npm run build && cd ../",
-        "api:start": "cd udagram-api/ && npm run dev && cd ../",
-        "api:deploy": "cd udagram-api/ && npm run deploy && cd ../",
-        "deploy": "npm run api:deploy && npm run frontend:deploy"
+        "install:api": "cd udagram-api/ && npm install --force && cd ../",
+        "install:frontend": "cd udagram-frontend/ && npm install --force && cd ../",
+        "install": "npm run install:api && npm run install:frontend",
+        "prettier": "prettier --config .prettierrc **/src/**/*.ts **/src/**/*.js  --write",
+        "lint": "eslint . --ext .ts",
+        "build:api": "cd udagram-api/ && npm run build && cd ../",
+        "build:frontend": "cd udagram-frontend/ && npm run build:prod && cd ../",
+        "build": "npm run build:api && npm run build:frontend",
+        "deploy:api": "cd udagram-api/ && npm run eb:deploy && cd ../",
+        "deploy:frontend": "cd udagram-frontend/ && npm run s3:upload && cd ../",
+        "deploy": "npm run deploy:api && npm run deploy:frontend",
+        "test:api": "cd udagram-api/ && npm run test && cd ../",
+        "test:frontend": "cd udagram-frontend/ && npm run test && cd ../",
+        "test": "npm run test:api && npm run test:frontend"
     }
 }

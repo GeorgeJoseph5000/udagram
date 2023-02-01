@@ -5,12 +5,15 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
-    "start": "export SET NODE_OPTIONS=--openssl-legacy-provider && ng serve",
-    "build": "npm install -f && ng build",
-    "deploy": "export SET NODE_OPTIONS=--openssl-legacy-provider && npm install -f && npm run build && chmod +x bin/deploy.sh && bin/deploy.sh",
-    "test": "ng test --watch=false",
+    "start": "ng serve",
+    "build:dev": "ng build",
+    "build:prod": "ng build --prod",
+    "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "s3:create": "chmod +x \"../scripts/s3-create.sh\" && \"../scripts/s3-create.sh\"",
+    "s3:upload": "chmod +x \"../scripts/s3-upload.sh\" && \"../scripts/s3-upload.sh\"",
+    "s3:delete": "chmod +x \"../scripts/s3-delete.sh\" && \"../scripts/s3-delete.sh\""
   },
   "private": true,
   "dependencies": {

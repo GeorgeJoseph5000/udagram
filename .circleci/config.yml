@@ -1,74 +1,201 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine
 version: 2.1
+
+# Specify used packages of CircleCI configuration
 orbs:
-  # orgs contain basc recipes and reproducible actions (install node, aws, etc.)
   node: circleci/node@5.0.2
-  eb: circleci/aws-elastic-beanstalk@2.0.1
   aws-cli: circleci/aws-cli@3.1.1
-  # different jobs are calles later in the workflows sections
+  eb: circleci/aws-elastic-beanstalk@2.0.1
+
+# Repetitive commands through jobs
+commands:
+  # udagram-api/ installation
+  install_api:
+    description: Install server-side dependencies and save into cache
+    steps:
+      # restore previous cache
+      - restore_cache:
+          keys:
+            - api-dependencies-{{ checksum "package.json" }}
+            - api-dependencies-
+
+      # perform installation
+      - run:
+          name: Install udagram-api/
+          command: npm run install:api
+
+      # save cache for later installations
+      - save_cache:
+          key: api-dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+
+  # udagram-frontend/ installation
+  install_frontend:
+    description: Install client-side dependencies and save into cache
+    steps:
+      # restore previous cache
+      - restore_cache:
+          keys:
+            - front-dependencies-{{ checksum "package.json" }}
+            - front-dependencies-
+
+      # perform installation
+      - run:
+          name: Install udagram-frontend/
+          command: npm run install:frontend
+
+      # save cache for later installations
+      - save_cache:
+          key: front-dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+
+
+  # udagram-api/ build command
+  build_api:
+    description: Build server-side
+    steps:
+      # perform build.
+      - run:
+          name: Build udagram-api/
+          command: npm run build:api
+
+  # udagram-frontend/ build command
+  build_frontend:
+    description: Build client-side
+    steps:
+      # perform build
+      - run:
+          name: Build udagram-frontend/
+          command: npm run build:frontend
+
+# Define a job to be invoked later in a workflow
 jobs:
-  build:
+  # Install udagram-api/ dependencies job
+  install-api:
+    # Specify the execution environment
     docker:
-      # the base image can run most needed actions with orbs
-      - image: "cimg/node:14.15"
+      - image: cimg/base:stable
+    # Add steps to the job
     steps:
-      # install node and checkout code
-      - node/install:
-          node-version: '14.15'         
+      - node/install
       - checkout
-      # Use root level package.json to install dependencies in the frontend app
-      - run:
-          name: Install Front-End Dependencies
-          command: |
-            echo "NODE --version" 
-            echo $(node --version)
-            echo "NPM --version" 
-            echo $(npm --version)
-            npm run frontend:install
-      # TODO: Install dependencies in the the backend API          
-      - run:
-          name: Install API Dependencies
-          command: |
-            npm run api:install
-      
-      # TODO: Build the frontend app
-      - run:
-          name: Front-End Build
-          command: |
-            npm run frontend:build
-      # TODO: Build the backend API      
-      - run:
-          name: API Build
-          command: |
-            npm run deploy
-  # deploy step will run only after manual approval
-  deploy:
+      - install_api
+
+  # Install udagram-frontend/ dependencies job
+  install-frontend:
+    # Specify the execution environment
     docker:
-      - image: "cimg/base:stable"
-      # more setup needed for aws, node, elastic beanstalk
+      - image: cimg/base:stable
+    # Add steps to the job
     steps:
-      - node/install:
-          node-version: '14.15' 
-      - eb/setup
+      - node/install
+      - checkout
+      - install_frontend
+
+  # Build udagram-api/ job
+  build-api:
+    # Specify the execution environment
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    steps:
+      - node/install
       - aws-cli/setup
+      - eb/setup
       - checkout
+
+      # install udagram-api/
+      - install_api
+
+      # Build api job
+      - build_api
+
+  # Build udagram-frontend/ job
+  build-frontend:
+    # Specify the execution environment
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    steps:
+      - node/install
+      - aws-cli/setup
+      - eb/setup
+      - checkout
+
+      # install udagram-frontend/
+      - install_frontend
+
+      # Build frontend job
+      - build_frontend
+
+  # Deploy job
+  deploy-api:
+    # Specify the execution environment
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    steps:
+      - node/install
+      - aws-cli/setup
+      - eb/setup
+      - checkout
+
+      # install udagram-api/
+      - install_api
+
+      # build udagram-api/
+      - build_api
+
+      # Deploy udagram-api/
       - run:
-          name: Deploy App
-          # TODO: Install, build, deploy in both apps
-          command: |
-            npm run deploy
-            
+          name: Deploy udagram-api/
+          command: npm run deploy:api
+
+    # Deploy job
+  
+  deploy-frontend:
+    # Specify the execution environment
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    steps:
+      - node/install
+      - aws-cli/setup
+      - eb/setup
+      - checkout
+
+      # install udagram-frontend/
+      - install_frontend
+
+      # build udagram-frontend/
+      - build_frontend
+
+      # Deploy udagram-frontend/
+      - run:
+          name: Deploy udagram-frontend/
+          command: npm run deploy:frontend
+
+# Invoke jobs via workflows
 workflows:
-  udagram:
+  project-workflow:
     jobs:
-      - build
-      - hold:
-          filters:
-            branches:
-              only:
-                - master
-          type: approval
+      - install-api
+      - install-frontend
+
+      - build-api:
           requires:
-            - build
-      - deploy:
+            - install-api
+
+      - build-frontend:
           requires:
-            - hold
+            - install-frontend
+
+      - deploy-api:
+          requires:
+            - build-api
+
+      - deploy-frontend:
+          requires:
+            - build-frontend
