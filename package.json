@@ -3,8 +3,6 @@
         "install:api": "cd udagram-api/ && npm install --force && cd ../",
         "install:frontend": "cd udagram-frontend/ && npm install --force && cd ../",
         "install": "npm run install:api && npm run install:frontend",
-        "prettier": "prettier --config .prettierrc **/src/**/*.ts **/src/**/*.js  --write",
-        "lint": "eslint . --ext .ts",
         "build:api": "cd udagram-api/ && npm run build && cd ../",
         "build:frontend": "cd udagram-frontend/ && npm run build:prod && cd ../",
         "build": "npm run build:api && npm run build:frontend",
@@ -13,6 +11,7 @@
         "deploy": "npm run deploy:api && npm run deploy:frontend",
         "test:api": "cd udagram-api/ && npm run test && cd ../",
         "test:frontend": "cd udagram-frontend/ && npm run test && cd ../",
-        "test": "npm run test:api && npm run test:frontend"
+        "test": "npm run test:api && npm run test:frontend",
+        "create_env_file":"chmod +x create_env_file.sh && create_env_file.sh"
     }
 }

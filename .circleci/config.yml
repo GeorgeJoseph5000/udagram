@@ -29,6 +29,13 @@ commands:
           key: api-dependencies-{{ checksum "package.json" }}
           paths:
             - node_modules
+  
+  create_env_file:
+    description: Create Env File
+    steps:
+      - run:
+          name: Create Env File/
+          command: npm run create_env_file
 
   # udagram-frontend/ installation
   install_frontend:
@@ -82,6 +89,7 @@ jobs:
       - node/install
       - checkout
       - install_api
+      - create_env_file
 
   # Install udagram-frontend/ dependencies job
   install-frontend:
