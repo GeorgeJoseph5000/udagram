@@ -1,0 +1,13 @@
+- frontend:
+    enable ACL
+    disable block public
+    set cors rules for uploading
+- backend: 
+    first start with eb init then eb create
+    make sure that the start script is in the the root not in www/
+great links:
+https://github.dev/ibrahimelmokhtar/udagram-deployment
+https://www.yonisfy.com/udacity/projects/hosting-full-stack-application#elasticbeanstalk
+https://devpress.csdn.net/k8s/62f4e9817e6682346618933d.html
+https://github.com/udacity/nd0067-c4-deployment-process-project-starter/blob/master/.circleci/config.yml
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html#cors-example-1
