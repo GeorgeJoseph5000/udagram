@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "export SET NODE_OPTIONS=--openssl-legacy-provider && ng serve",
-    "build": "export SET NODE_OPTIONS=--openssl-legacy-provider && npm install -f && ng build",
+    "build": "npm install -f && ng build",
     "deploy": "export SET NODE_OPTIONS=--openssl-legacy-provider && npm install -f && npm run build && chmod +x bin/deploy.sh && bin/deploy.sh",
     "test": "ng test --watch=false",
     "lint": "ng lint",
