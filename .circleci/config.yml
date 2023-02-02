@@ -196,15 +196,27 @@ workflows:
       - build-api:
           requires:
             - install-api
+          filters:
+            branches:
+              only: main
 
       - build-frontend:
           requires:
             - install-frontend
+          filters:
+            branches:
+              only: main
 
       - deploy-api:
           requires:
             - build-api
+          filters:
+            branches:
+              only: main
 
       - deploy-frontend:
           requires:
             - build-frontend
+          filters:
+            branches:
+              only: main
