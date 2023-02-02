@@ -198,25 +198,25 @@ workflows:
             - install-api
           filters:
             branches:
-              ignore: /.circleci
+              only: main
 
       - build-frontend:
           requires:
             - install-frontend
           filters:
             branches:
-              ignore: /.circleci
+              only: main
 
       - deploy-api:
           requires:
             - build-api
           filters:
             branches:
-              ignore: /.circleci
+              only: main
 
       - deploy-frontend:
           requires:
             - build-frontend
           filters:
             branches:
-              ignore: /.circleci
+              only: main
